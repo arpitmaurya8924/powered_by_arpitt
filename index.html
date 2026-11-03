@@ -1,0 +1,775 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#ffd6e8">
+<title>Babita's Pookie World 🎀</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&family=Pacifico&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+ --pink:#ff78ad;
+ --dark:#c73f83;
+ --light:#ffe4ef;
+ --purple:#d9b9ff;
+}
+
+body{
+ min-height:100vh;
+ overflow-x:hidden;
+ font-family:'Quicksand',sans-serif;
+ background:linear-gradient(135deg,#ffe1ec,#ffd1e7,#ead8ff);
+ color:#854b70;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ padding:15px 0;
+}
+
+body:before{
+ content:"";
+ position:fixed;inset:0;
+ background-image:radial-gradient(#fff 1.5px,transparent 1.5px);
+ background-size:25px 25px;
+ opacity:.35;pointer-events:none;
+}
+
+#app{
+ width:100%;max-width:440px;
+ min-height:600px;
+ padding:16px;
+ position:relative;z-index:2;
+}
+
+.top{
+ display:flex;justify-content:space-between;
+ align-items:center;margin-bottom:12px;
+ font-size:12px;font-weight:800;
+ color:#b64b80;
+}
+
+.timer{
+ background:#fff8;
+ padding:8px 13px;
+ border-radius:20px;
+ border:1px solid white;
+}
+
+.progress{
+ height:7px;background:#fff9;
+ border-radius:20px;overflow:hidden;
+ margin-bottom:16px;
+}
+#bar{
+ height:100%;width:0%;
+ background:linear-gradient(90deg,#ff72a9,#bd83ed);
+ transition:width .5s;
+}
+
+.panel{
+ background:#ffffffdc;
+ border:2px solid white;
+ border-radius:28px;
+ padding:25px 19px;
+ min-height:475px;
+ text-align:center;
+ box-shadow:0 15px 40px #bd609344;
+ position:relative;
+ overflow:hidden;
+}
+
+.screen{display:none}
+.screen.active{
+ display:block;
+ animation:enter .55s ease;
+}
+@keyframes enter{
+ from{opacity:0;transform:translateY(20px) scale(.97)}
+ to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+.cat{
+ font-size:65px;
+ margin:12px 0;
+ animation:bounce 2s infinite;
+}
+@keyframes bounce{
+ 0%,100%{transform:translateY(0)}
+ 50%{transform:translateY(-9px)}
+}
+
+h1{
+ color:#d94e91;
+ font-size:27px;
+ margin:12px 0;
+ font-weight:800;
+}
+
+h2{
+ color:#d95b99;
+ font-size:20px;
+ margin:13px 0;
+}
+
+p{
+ font-size:15px;
+ line-height:1.8;
+ margin:12px 0;
+}
+
+button{
+ border:0;
+ background:linear-gradient(135deg,#ff78ad,#e85b9e);
+ color:white;
+ font-family:inherit;
+ font-size:14px;
+ font-weight:800;
+ padding:13px 19px;
+ border-radius:30px;
+ margin:7px 3px;
+ cursor:pointer;
+ box-shadow:0 6px 14px #e78bb966;
+ transition:.2s;
+}
+button:active{transform:scale(.92)}
+button.secondary{
+ background:linear-gradient(135deg,#c49ae9,#a77bce);
+}
+button.white{
+ background:white;color:#cf5791;
+ border:1px solid #f8c5dc;
+}
+.small{
+ font-size:11px;color:#bd81a1;
+}
+.tag{
+ display:inline-block;
+ background:#ffe6f0;
+ padding:7px 13px;
+ border-radius:20px;
+ font-size:12px;
+ margin:4px;
+ color:#ce548f;
+ font-weight:800;
+}
+
+.options{
+ display:flex;flex-wrap:wrap;
+ justify-content:center;
+ margin:12px 0;
+}
+
+.gamearea{
+ background:#fff0f6;
+ border-radius:20px;
+ padding:15px;
+ min-height:120px;
+ margin:15px 0;
+}
+
+.gridgame{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:8px;
+ margin:15px 0;
+}
+
+.tile{
+ background:#f7c8df;
+ color:#c74e8d;
+ border-radius:13px;
+ min-height:55px;
+ font-size:23px;
+ display:flex;align-items:center;justify-content:center;
+ cursor:pointer;
+}
+.tile.done{background:#e7d5f5;opacity:.5}
+
+.heart{
+ position:fixed;
+ z-index:5;
+ pointer-events:none;
+ animation:float 5s linear forwards;
+}
+@keyframes float{
+ to{transform:translateY(-110vh) rotate(360deg);opacity:0}
+}
+
+.star{
+ position:fixed;
+ pointer-events:none;
+ animation:twinkle 2s infinite alternate;
+}
+@keyframes twinkle{
+ from{opacity:.3;transform:scale(.7)}
+ to{opacity:1;transform:scale(1.3)}
+}
+
+#catchArea{
+ position:relative;
+ height:190px;
+ background:#fff0f7;
+ border-radius:18px;
+ overflow:hidden;
+}
+.catchheart{
+ position:absolute;
+ font-size:28px;
+ cursor:pointer;
+ user-select:none;
+}
+
+.gift{
+ font-size:85px;
+ cursor:pointer;
+ display:inline-block;
+ animation:shake 1s infinite;
+}
+@keyframes shake{
+ 0%,100%{transform:rotate(0)}
+ 25%{transform:rotate(-8deg)}
+ 75%{transform:rotate(8deg)}
+}
+
+.footer{
+ margin-top:12px;
+ text-align:center;
+ font-size:11px;
+ color:#b56c91;
+}
+
+#toast{
+ position:fixed;
+ top:15%;left:50%;
+ transform:translateX(-50%);
+ background:#fff;
+ padding:12px 20px;
+ border-radius:30px;
+ box-shadow:0 5px 20px #ad588555;
+ z-index:50;
+ display:none;
+ color:#cb548d;
+ font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div id="toast"></div>
+
+<div id="app">
+
+<div class="top">
+ <span>☾ BABITA'S POOKIE WORLD 🎀</span>
+ <span class="timer">⏳ <b id="clock">05:00</b></span>
+</div>
+
+<div class="progress"><div id="bar"></div></div>
+
+<div class="panel">
+
+<!-- 1 WELCOME -->
+<section class="screen active" id="s1">
+ <div class="cat">💌🐱</div>
+ <span class="tag">A special surprise for you</span>
+ <h1>Hey Babitaaa!</h1>
+ <p>
+ Someone has prepared a tiny little world<br>
+ filled with cats, love and nonsense 😂💗
+ <br><br>
+ And guess what?<br>
+ <b>YOU ARE THE MAIN CHARACTER!</b> 🎀
+ </p>
+ <button onclick="start()">ENTER MY WORLD ✨</button>
+ <p class="small">Made with lots of pookie energy ♡</p>
+</section>
+
+<!-- 2 INTRO -->
+<section class="screen" id="s2">
+ <div class="cat">🐈🎀</div>
+ <h1>Meet Mr. Pookie!</h1>
+ <p>
+ Meowww! I'm Mr. Pookie. 🐾<br>
+ Your official happiness inspector.
+ <br><br>
+ My job is to check whether Babita<br>
+ is smiling or not!
+ </p>
+ <h2>Inspection result:</h2>
+ <span class="tag">100% CUTIE DETECTED</span>
+ <button onclick="go(3)">NEXT MEOW 🐾</button>
+</section>
+
+<!-- 3 COMPLIMENT -->
+<section class="screen" id="s3">
+ <div class="cat">🌷🐱</div>
+ <h1>Compliment Machine!</h1>
+ <p>Click the button. Mr. Pookie has something to say! 😂</p>
+ <div class="gamearea">
+  <h2 id="compliment">Waiting for magic... ✨</h2>
+ </div>
+ <button onclick="compliment()">GENERATE COMPLIMENT 💗</button>
+ <button class="secondary" onclick="go(4)">Next ➜</button>
+</section>
+
+<!-- 4 FUNNY -->
+<section class="screen" id="s4">
+ <div class="cat">😭🐈</div>
+ <h1>Breaking News!</h1>
+ <p>
+ Scientists have discovered a new problem...
+ </p>
+ <div class="gamearea">
+  <h2>Babita is too cute!</h2>
+  <p>Scientists are now unable to concentrate. 😂</p>
+  <h1>🚨 1000% CUTENESS 🚨</h1>
+ </div>
+ <p>Should we call the cuteness police?</p>
+ <button onclick="toast('Police also became your fans 😂')">YES 😂</button>
+ <button class="secondary" onclick="go(5)">NEXT 🦋</button>
+</section>
+
+<!-- 5 MISS ME -->
+<section class="screen" id="s5">
+ <div class="cat">🥺💗</div>
+ <h1>One important question...</h1>
+ <p>
+ Babitaaa, tell me honestly...
+ <br><br>
+ <b style="font-size:21px">DO YOU MISS ME? 🫠💋</b>
+ </p>
+ <button onclick="go(6)">YESSSS 💗</button>
+ <button id="no" onpointerenter="run()" ontouchstart="run()">NO 😏</button>
+ <p id="nohint" class="small">No jhooth allowed madam ji 😂</p>
+</section>
+
+<!-- 6 REACTION -->
+<section class="screen" id="s6">
+ <div class="cat">😭💖</div>
+ <h1>I KNEW ITTT!</h1>
+ <p>
+ Hehehe! Someone missed their pagal bestie!
+ <br><br>
+ Ab itna miss kiya hai toh ek smile toh banti hai. 😂
+ </p>
+ <button onclick="go(7)">Okay nexttt 🎀</button>
+</section>
+
+<!-- 7 CATCH HEARTS -->
+<section class="screen" id="s7">
+ <div class="cat">💗🐱</div>
+ <h1>Catch the Hearts!</h1>
+ <p>Tap 10 floating hearts before moving on!</p>
+ <div class="gamearea">
+  <h2>Score: <span id="score">0</span>/10</h2>
+  <div id="catchArea"></div>
+ </div>
+ <button class="secondary" onclick="go(8)">Skip game ➜</button>
+ <p class="small">Catch all the pookie hearts! 💗</p>
+</section>
+
+<!-- 8 MEMORY -->
+<section class="screen" id="s8">
+ <div class="cat">🧠🐈</div>
+ <h1>Memory Challenge!</h1>
+ <p>Find matching pairs of cute emojis!</p>
+ <div class="gridgame" id="memory"></div>
+ <p id="memstatus" class="small">Find all matching pairs!</p>
+ <button class="secondary" onclick="go(9)">Next ➜</button>
+</section>
+
+<!-- 9 EMOJI QUIZ -->
+<section class="screen" id="s9">
+ <div class="cat">🤔🍓</div>
+ <h1>Guess The Emoji!</h1>
+ <h2>🐱 + 👑 = ?</h2>
+ <p>What is this combination?</p>
+ <div class="options">
+  <button onclick="quiz(false,'s9msg')">Lion 😂</button>
+  <button onclick="quiz(true,'s9msg')">Queen Cat 👑</button>
+  <button onclick="quiz(false,'s9msg')">Tiger 🐯</button>
+ </div>
+ <p id="s9msg" class="small">Choose your answer!</p>
+ <button class="secondary" onclick="go(10)">Next ➜</button>
+</section>
+
+<!-- 10 CAT FEED -->
+<section class="screen" id="s10">
+ <div class="cat" id="hungry">🐱</div>
+ <h1>Feed the Hungry Kitty!</h1>
+ <p>
+ Meowww! Mr. Pookie is hungry.<br>
+ Give him 5 treats!
+ </p>
+ <h2>Treats: <span id="treats">0</span>/5</h2>
+ <button onclick="feed()">🍓 GIVE FOOD</button>
+ <div class="gamearea">
+  <p id="feedmsg">I'm hungryyyy! 😿</p>
+ </div>
+ <button class="secondary" onclick="go(11)">Next ➜</button>
+</section>
+
+<!-- 11 BESTIE QUIZ -->
+<section class="screen" id="s11">
+ <div class="cat">🎀😂</div>
+ <h1>Bestie Personality Test!</h1>
+ <p>What describes you the most?</p>
+ <div class="options">
+  <button onclick="personality('Cute but dangerous 😼')">Cute but dangerous 😼</button>
+  <button onclick="personality('Certified pookie 🎀')">Certified pookie 🎀</button>
+  <button onclick="personality('Professional drama queen 😂')">Drama queen 😂</button>
+ </div>
+ <div class="gamearea">
+  <h2 id="personality">Waiting for result...</h2>
+ </div>
+ <button class="secondary" onclick="go(12)">Next ➜</button>
+</section>
+
+<!-- 12 SECRET -->
+<section class="screen" id="s12">
+ <div class="cat">🔐💌</div>
+ <h1>Secret Message!</h1>
+ <p>
+ A secret message is hidden here.<br>
+ Unlock it using the magic word!
+ </p>
+ <input id="magic" placeholder="Enter: POOKIE"
+ style="padding:13px;border-radius:20px;border:2px solid #f5b5d2;width:85%;text-align:center;font-family:inherit">
+ <br>
+ <button onclick="unlock()">UNLOCK 💗</button>
+ <div class="gamearea">
+  <p id="secret">🔒 Locked message</p>
+ </div>
+ <button class="secondary" onclick="go(13)">Next ➜</button>
+</section>
+
+<!-- 13 GIFT -->
+<section class="screen" id="s13">
+ <div class="cat">🎁🐱</div>
+ <h1>A Little Gift For You!</h1>
+ <p>Tap the gift box to open your surprise!</p>
+ <div class="gift" onclick="openGift()" id="gift">🎁</div>
+ <div class="gamearea">
+  <h2 id="giftmsg">Something special is inside! 💗</h2>
+ </div>
+ <button class="secondary" onclick="go(14)">Next ➜</button>
+</section>
+
+<!-- 14 LETTER -->
+<section class="screen" id="s14">
+ <div class="cat">💌🌸</div>
+ <h1>A little letter...</h1>
+ <div class="gamearea">
+  <p style="font-size:15px">
+   Dear Babitaaa! 🎀
+   <br><br>
+   Some people make ordinary days
+   a little more special.
+   <br><br>
+   Your friendship is one of those
+   little happinesses.
+   <br><br>
+   Never forget that you deserve
+   kindness, smiles and lots of
+   beautiful moments.
+   <br><br>
+   Stay silly, stay happy and
+   never lose your pookie energy! 🐱
+   <br><br>
+   From your pagal bestie! 😂💗
+  </p>
+ </div>
+ <button onclick="go(15)">FINAL SURPRISE 🎉</button>
+</section>
+
+<!-- 15 FINAL -->
+<section class="screen" id="s15">
+ <div class="cat">🐱🎀🦋</div>
+ <span class="tag">MISSION COMPLETED</span>
+ <h1>Babita's Pookie World!</h1>
+ <p>
+ You completed all these little surprises!
+ <br><br>
+ Thank you for being you. 💗
+ <br><br>
+ Keep smiling, keep shining
+ and keep being adorable!
+ </p>
+ <h2>BESTIES FOREVER ♾️</h2>
+ <div style="font-size:35px">💗🌸🐈🦋</div>
+ <button onclick="finalParty()">CELEBRATE AGAIN! 🎉</button>
+ <p id="partymsg" class="small"></p>
+</section>
+
+<!-- TIME UP -->
+<section class="screen" id="s16">
+ <div class="cat">🐱💌</div>
+ <h1>Five Minutes of Pookie Magic!</h1>
+ <p>
+ Time to go back to the real world,
+ Babitaaa! 😂
+ <br><br>
+ But remember...
+ A little friendship and happiness
+ can last much longer than five minutes. 💗
+ <br><br>
+ Take care, pookie! 🎀
+ </p>
+ <h2>BYEEE! 🫶🏻</h2>
+ <button onclick="celebrate()">One more little party 🎉</button>
+</section>
+
+</div>
+
+<div class="footer">
+ Made with ♡ for Babita | Pookie World 🎀
+</div>
+
+</div>
+
+<script>
+let current=1;
+let started=false;
+let seconds=300;
+let timerInterval;
+let heartScore=0;
+let feedCount=0;
+let matched=0;
+let selected=[];
+let locked=false;
+
+function start(){
+ if(!started){
+  started=true;
+  timerInterval=setInterval(tick,1000);
+  spawnHearts();
+ }
+ go(2);
+}
+
+function tick(){
+ seconds--;
+ let m=Math.floor(seconds/60);
+ let s=seconds%60;
+ document.getElementById("clock").innerText=
+ String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+
+ if(seconds<=0){
+  clearInterval(timerInterval);
+  document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+  document.getElementById("s16").classList.add("active");
+  document.getElementById("bar").style.width="100%";
+  current=16;
+ }
+}
+
+function go(n){
+ if(n===7) startCatch();
+ if(n===8 && !document.getElementById("memory").children.length)
+  initMemory();
+
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+ current=n;
+ document.getElementById("s"+n).classList.add("active");
+ document.getElementById("bar").style.width=
+ (n/15*100)+"%";
+}
+
+function toast(msg){
+ const t=document.getElementById("toast");
+ t.innerText=msg;
+ t.style.display="block";
+ setTimeout(()=>t.style.display="none",1800);
+}
+
+function run(){
+ const b=document.getElementById("no");
+ let x=Math.random()*(innerWidth-b.offsetWidth-10);
+ let y=Math.random()*(innerHeight-b.offsetHeight-10);
+ b.style.position="fixed";
+ b.style.margin="0";
+ b.style.left=Math.max(5,x)+"px";
+ b.style.top=Math.max(5,y)+"px";
+ b.style.zIndex=20;
+ document.getElementById("nohint").innerText=
+ ["HAHA! Pakad ke dikhao! 😂",
+ "NO button is shy today! 😭",
+ "Babitaaa, try again! 💋",
+ "Error 404: NO not found! 🤣"]
+ [Math.floor(Math.random()*4)];
+}
+
+const compliments=[
+ "Your smile deserves its own fan club! 🌸",
+ "You are 100% premium pookie! 🎀",
+ "Even the stars are jealous of your sparkle! ✨",
+ "You are a walking sunshine! ☀️",
+ "Cute level: UNLIMITED! 😭",
+ "Mr. Pookie approves your existence! 🐱",
+ "Your vibe is a whole strawberry cake! 🍓"
+];
+
+function compliment(){
+ document.getElementById("compliment").innerText=
+ compliments[Math.floor(Math.random()*compliments.length)];
+}
+
+function spawnHearts(){
+ setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText=["💗","💕","✨","🌸","🐾","🎀"]
+  [Math.floor(Math.random()*6)];
+  h.style.left=Math.random()*100+"vw";
+  h.style.fontSize=(20+Math.random()*22)+"px";
+  h.style.animationDuration=(4+Math.random()*4)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),8000);
+ },550);
+}
+
+function startCatch(){
+ const area=document.getElementById("catchArea");
+ if(area.dataset.started)return;
+ area.dataset.started="yes";
+ heartScore=0;
+ document.getElementById("score").innerText=0;
+
+ function make(){
+  if(heartScore>=10)return;
+  const h=document.createElement("span");
+  h.className="catchheart";
+  h.innerText=["💗","💖","💕","❤️"][Math.floor(Math.random()*4)];
+  h.style.left=Math.random()*85+"%";
+  h.style.top=Math.random()*75+"%";
+  h.onclick=()=>{
+   heartScore++;
+   document.getElementById("score").innerText=heartScore;
+   h.remove();
+   if(heartScore>=10)toast("YAY! Pookie hearts collected! 🎉");
+   else make();
+  };
+  area.appendChild(h);
+ }
+ for(let i=0;i<5;i++)make();
+}
+
+function initMemory(){
+ const emojis=["🐱","🐱","💗","💗","🎀","🎀","🌸","🌸"];
+ emojis.sort(()=>Math.random()-.5);
+ const board=document.getElementById("memory");
+ emojis.forEach((emoji,i)=>{
+  const tile=document.createElement("div");
+  tile.className="tile";
+  tile.innerText="❔";
+  tile.dataset.value=emoji;
+  tile.onclick=()=>{
+   if(locked||tile.classList.contains("done")||
+      selected.includes(tile))return;
+   tile.innerText=emoji;
+   selected.push(tile);
+   if(selected.length===2){
+    locked=true;
+    if(selected[0].dataset.value===selected[1].dataset.value){
+     selected.forEach(x=>x.classList.add("done"));
+     matched++;
+     document.getElementById("memstatus").innerText=
+     "Match found! 🎉";
+     selected=[];
+     locked=false;
+     if(matched===4)toast("Memory master! 🧠💗");
+    }else{
+     document.getElementById("memstatus").innerText="Try again! 🐾";
+     setTimeout(()=>{
+      selected.forEach(x=>x.innerText="❔");
+      selected=[];
+      locked=false;
+     },850);
+    }
+   }
+  };
+  board.appendChild(tile);
+ });
+}
+
+function quiz(correct,id){
+ document.getElementById(id).innerText=correct?
+ "Correct! Queen Cat has been crowned! 👑":
+ "Oops! Try again, pookie! 😂";
+}
+
+function feed(){
+ if(feedCount>=5){
+  toast("Kitty is already full! 😻");
+  return;
+ }
+ feedCount++;
+ document.getElementById("treats").innerText=feedCount;
+ document.getElementById("hungry").innerText=
+ feedCount===5?"😻":"🐱";
+ document.getElementById("feedmsg").innerText=
+ feedCount===5?
+ "PURRRR! Best food ever! 😻💗":
+ "Nom nom nom! Thank you! 🍓";
+}
+
+function personality(value){
+ document.getElementById("personality").innerText=value;
+}
+
+function unlock(){
+ let value=document.getElementById("magic").value.trim().toUpperCase();
+ document.getElementById("secret").innerText=
+ value==="POOKIE"?
+ "You are someone's favourite little sunshine! ☀️💗":
+ "Wrong magic word! Hint: POOKIE 🎀";
+}
+
+let giftOpened=false;
+function openGift(){
+ if(giftOpened)return;
+ giftOpened=true;
+ document.getElementById("gift").innerText="💝";
+ document.getElementById("giftmsg").innerText=
+ "Surprise! Unlimited hugs, happiness & friendship! 🥹💗";
+ party();
+}
+
+function party(){
+ for(let i=0;i<30;i++){
+  setTimeout(()=>{
+   const h=document.createElement("div");
+   h.className="heart";
+   h.innerText=["🎉","💗","✨","🎀","🌸"][Math.floor(Math.random()*5)];
+   h.style.left=Math.random()*100+"vw";
+   h.style.fontSize="30px";
+   document.body.appendChild(h);
+   setTimeout(()=>h.remove(),5000);
+  },i*45);
+ }
+}
+
+function celebrate(){
+ party();
+ document.getElementById("partymsg").innerText=
+ "Pookie partyyyyy! 🎉🐱💗";
+}
+
+function finalParty(){
+ party();
+ document.getElementById("partymsg").innerText=
+ "Babitaaa, you are awesome! 🎀💋";
+}
+
+spawnHearts();
+</script>
+
+</body>
+                                            </html>
+   
